@@ -2,24 +2,38 @@
 #include <stdexcept>
 using namespace std;
 
+struct GuessResult
+{
+	bool isAllMatched;
+	int numberOfStrikes;
+	int numberOfBalls;
+};
+
 class BaseBall
 {
 public:
-	void Guess(const string& guessNumber)
+	BaseBall(string& initialDigits) :
+		m_initialDigits(initialDigits)
 	{
-		if (guessNumber.length() != 3)
-			throw length_error("Must be three letters.");
+	}
 
-		for (const auto aDigit : guessNumber)
+
+
+	GuessResult Guess(const string& guessNumber)
+	{
+		GuessResult result{};
+		ValidateInput(guessNumber);
+
+		if (guessNumber == m_initialDigits)
 		{
-			if (false == IsCharacter(aDigit))
-			{
-				throw invalid_argument("Not a valid digit from 0 to 9");
-			}
+			result.isAllMatched = true;
+			result.numberOfStrikes = 3;
+			result.numberOfBalls = 0;
+
+			return result;
 		}
 
-		if (IsDuplicated(guessNumber))
-			throw invalid_argument("Duplicated digit");
+		return result;
 	}
 
 private:
@@ -47,4 +61,22 @@ private:
 
 		return false;
 	}
+
+	void ValidateInput(const string& guessNumber)
+	{
+		if (guessNumber.length() != 3)
+			throw length_error("Must be three letters.");
+
+		for (const auto aDigit : guessNumber)
+		{
+			if (false == IsCharacter(aDigit))
+			{
+				throw invalid_argument("Not a valid digit from 0 to 9");
+			}
+		}
+
+		if (IsDuplicated(guessNumber))
+			throw invalid_argument("Duplicated digit");
+	}
+	string m_initialDigits;
 };
