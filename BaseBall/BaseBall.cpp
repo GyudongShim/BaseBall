@@ -1,7 +1,33 @@
 ﻿#pragma once
+#include <stdexcept>
+using namespace std;
 
 class BaseBall
 {
+public:
+	void Guess(const string& string)
+	{
+		if (string.length() != 3)
+			throw length_error("Must be three letters.");
 
+		for (auto aDigit : string)
+		{
+			if (false == IsCharacter(aDigit))
+			{
+				throw invalid_argument("Not a valid digit from 0 to 9");
+			}
+		}
+	}
 
+private:
+	bool IsCharacter(char aCharacter)
+	{
+		if (aCharacter < '0')
+			return false;
+
+		if (aCharacter > '9')
+			return false;
+
+		return true;
+	}
 };
