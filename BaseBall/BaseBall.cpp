@@ -21,7 +21,7 @@ public:
 
 	GuessResult Guess(const string& guessNumber)
 	{
-		GuessResult result{};
+		GuessResult result{false, 0, 0};
 		ValidateInput(guessNumber);
 
 		if (guessNumber == m_initialDigits)
@@ -33,10 +33,43 @@ public:
 			return result;
 		}
 
+		// Check strikes
+		for (int indexOfGuess = 0; indexOfGuess < 3; indexOfGuess++)
+		{
+			int matchedIndex = -1;
+			const char verifyDigit = guessNumber[indexOfGuess];
+
+			// 1. Check strike
+			if (verifyDigit == m_initialDigits[indexOfGuess])
+			{
+				result.numberOfStrikes++;
+				continue;
+			}
+
+			// 2. Check balls
+			for (int delta = 1; delta < 3; delta++)
+			{
+				const int checkIndex = (indexOfGuess + delta) % 3;
+				if (verifyDigit == m_initialDigits[checkIndex])
+				{
+					result.numberOfBalls++;
+					break;
+				}
+			}
+		}
+
+		if (result.numberOfStrikes == 3)
+			result.isAllMatched = true;
+
 		return result;
 	}
 
 private:
+	int GetNextIndex(int indexOfMine)
+	{
+		return (indexOfMine + 1) % 3;
+	}
+
 	bool IsCharacter(char aCharacter)
 	{
 		if (aCharacter < '0')
