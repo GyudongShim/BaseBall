@@ -1,14 +1,18 @@
 #include "pch.h"
 #include "../BaseBall/BaseBall.cpp"
 
-TEST(BaseballGame, ThrowExceptoinWhenInputLenghIsUnmatched) {
-	BaseBall game;
+class BaseBallFixture : public testing::Test
+{
+public:
+	BaseBall game{};
+	void assertIllegalArgument(string guessNumber)
+	{
+		// game.Guess 수행 후, Exception이 발생해야 pass이다.
+	}
+};
 
-	EXPECT_THROW(game.Guess(string("12")), length_error);
-}
-
-TEST(BaseballGame, ThrowExceptionWhenInvalidCharacter) {
-	BaseBall game;
-
-	EXPECT_THROW(game.Guess(string("12s")), invalid_argument);
+TEST_F(BaseBallFixture, ThrowExceptionWhenInvalid)
+{
+	assertIllegalArgument("12");
+	assertIllegalArgument("12s");
 }

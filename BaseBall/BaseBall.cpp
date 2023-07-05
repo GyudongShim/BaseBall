@@ -5,12 +5,12 @@ using namespace std;
 class BaseBall
 {
 public:
-	void Guess(const string& string)
+	void Guess(const string& guessNumber)
 	{
-		if (string.length() != 3)
+		if (guessNumber.length() != 3)
 			throw length_error("Must be three letters.");
 
-		for (auto aDigit : string)
+		for (const auto aDigit : guessNumber)
 		{
 			if (false == IsCharacter(aDigit))
 			{
