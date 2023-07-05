@@ -17,6 +17,9 @@ public:
 				throw invalid_argument("Not a valid digit from 0 to 9");
 			}
 		}
+
+		if (IsDuplicated(guessNumber))
+			throw invalid_argument("Duplicated digit");
 	}
 
 private:
@@ -29,5 +32,19 @@ private:
 			return false;
 
 		return true;
+	}
+
+	bool IsDuplicated(string guessNumber)
+	{
+		if (guessNumber[0] == guessNumber[1])
+			return true;
+
+		if (guessNumber[0] == guessNumber[2])
+			return true;
+			
+		if (guessNumber[1] == guessNumber[2])
+			return true;
+
+		return false;
 	}
 };
