@@ -17,45 +17,22 @@ public:
 	{
 	}
 
-
-
 	GuessResult Guess(const string& guessNumber)
 	{
 		GuessResult result{false, 0, 0};
+
+		// Throws exception for invalid inputs
 		ValidateInput(guessNumber);
 
-		if (guessNumber == m_initialDigits)
-		{
-			result.isAllMatched = true;
-			result.numberOfStrikes = 3;
-			result.numberOfBalls = 0;
-
-			return result;
-		}
-
-		// Check strikes
+		// Check one digit
 		for (int indexOfGuess = 0; indexOfGuess < 3; indexOfGuess++)
 		{
-			int matchedIndex = -1;
 			const char verifyDigit = guessNumber[indexOfGuess];
-
 			// 1. Check strike
-			if (verifyDigit == m_initialDigits[indexOfGuess])
-			{
-				result.numberOfStrikes++;
-				continue;
-			}
+			if (CheckStrike(result, indexOfGuess, verifyDigit)) continue;
 
-			// 2. Check balls
-			for (int delta = 1; delta < 3; delta++)
-			{
-				const int checkIndex = (indexOfGuess + delta) % 3;
-				if (verifyDigit == m_initialDigits[checkIndex])
-				{
-					result.numberOfBalls++;
-					break;
-				}
-			}
+			// 2. Check ball at different index
+			CheckBall(result, indexOfGuess, verifyDigit);
 		}
 
 		if (result.numberOfStrikes == 3)
@@ -65,9 +42,35 @@ public:
 	}
 
 private:
-	int GetNextIndex(int indexOfMine)
+	bool CheckStrike(GuessResult& result, int indexOfGuess, const char verifyDigit)
 	{
-		return (indexOfMine + 1) % 3;
+		if (CheckDigit(indexOfGuess, verifyDigit))
+		{
+			result.numberOfStrikes++;
+			return true;
+		}
+		return false;
+	}
+
+	void CheckBall(GuessResult& result, int indexOfGuess, const char verifyDigit)
+	{
+		for (int delta = 1; delta < 3; delta++)
+		{
+			const int checkIndex = (indexOfGuess + delta) % 3;
+			if (CheckDigit(checkIndex, verifyDigit))
+			{
+				result.numberOfBalls++;
+				break;
+			}
+		}
+	}
+
+	bool CheckDigit(int index, char digit)
+	{
+		if (m_initialDigits[index] != digit)
+			return false;
+
+		return true;
 	}
 
 	bool IsCharacter(char aCharacter)
@@ -111,5 +114,7 @@ private:
 		if (IsDuplicated(guessNumber))
 			throw invalid_argument("Duplicated digit");
 	}
+
+	// 3 digits and mutually different.
 	string m_initialDigits;
 };
